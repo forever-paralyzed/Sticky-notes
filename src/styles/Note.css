@@ -1,0 +1,76 @@
+.note {
+  position: absolute;
+  width: 220px;
+  aspect-ratio: 348 / 366;
+  box-sizing: border-box;
+  padding: 60px 28px 28px;
+  background: url('../assets/note.png') center / 100% 100% no-repeat;
+  color: #333;
+  overflow: hidden;
+  overflow-wrap: anywhere;
+  cursor: grab;
+  touch-action: none;
+  user-select: none;
+  filter: drop-shadow(2px 4px 6px rgba(0, 0, 0, 0.3));
+}
+
+.note-input {
+  z-index: 10;
+  position: fixed;
+  bottom: 20px;
+  left: 20px;
+  width: 200px;
+  padding: 20px 28px 28px;
+  background: url('../assets/png-input.png') center / 100% 100% no-repeat;
+  aspect-ratio: 348 / 166;
+  filter: drop-shadow(2px 4px 6px rgba(0, 0, 0, 0.3));
+}
+
+.note-btn {
+  width: 100px;
+
+  padding: 4px 14px;
+  font-family: inherit;
+  font-size: 16px;
+  color: #333;
+  background: rgba(255, 255, 255, 0.45);
+  border: 1px solid #b8a600;
+  border-radius: 4px;
+  cursor: pointer;
+  transition:
+    background 0.15s,
+    transform 0.1s;
+}
+
+.note-btn:hover {
+  background: rgba(255, 255, 255, 0.8);
+}
+
+.note-btn:active {
+  transform: scale(0.95);
+}
+
+.note-btn:focus-visible {
+  outline: 2px solid #333;
+  outline-offset: 2px;
+}
+
+.note-input input {
+  font-size: 20px;
+  font-family: inherit;
+  border: none;
+  background: transparent;
+  outline: none;
+  width: 100%;
+}
+
+.note-input input:focus {
+  outline: black;
+}
+
+.pen-input {
+  margin-left: 30px;
+  margin-top: 10px;
+  width: 50px;
+  aspect-ratio: 348 / 366;
+}
