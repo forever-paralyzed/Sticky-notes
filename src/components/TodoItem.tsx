@@ -1,6 +1,6 @@
 import type { Note } from '../types';
 import '.././styles/Note.css';
-import { useState, type PointerEvent } from 'react';
+import { useEffect, useState, type PointerEvent } from 'react';
 
 type TodoItemProps = {
   note: Note;
@@ -8,14 +8,19 @@ type TodoItemProps = {
     id: number,
     pos_x: number,
     pos_y: number,
-    cursorX: number,
-    cursorY: number,
+    noteRect: DOMRect,
   ) => void;
-  onDrag: (cursorX: number, cursorY: number) => void;
+  onDrag: (noteRect: DOMRect) => void;
 };
 
 function TodoItem({ note, onMove, onDrag }: TodoItemProps) {
   const [pos, setPos] = useState({ pos_x: note.pos_x, pos_y: note.pos_y });
+
+  // Если сервер сообщил новые координаты (например, после действия другого
+  // пользователя), обновляем позицию, которую рисует этот компонент.
+  useEffect(() => {
+    setPos({ pos_x: note.pos_x, pos_y: note.pos_y });
+  }, [note.pos_x, note.pos_y]);
 
   const [grab, setGrab] = useState<{ pos_x: number; pos_y: number } | null>(
     null,
@@ -31,7 +36,8 @@ function TodoItem({ note, onMove, onDrag }: TodoItemProps) {
       return;
     }
     setGrab(null);
-    onMove(note.id, pos.pos_x, pos.pos_y, e.clientX, e.clientY);
+    const noteRect = e.currentTarget.getBoundingClientRect();
+    onMove(note.id, pos.pos_x, pos.pos_y, noteRect);
   }
 
   function handleMove(e: PointerEvent<HTMLDivElement>) {
@@ -45,11 +51,18 @@ function TodoItem({ note, onMove, onDrag }: TodoItemProps) {
     const maxX = window.innerWidth - e.currentTarget.offsetWidth;
     const maxY = window.innerHeight - e.currentTarget.offsetHeight;
 
-    setPos({
-      pos_x: Math.max(0, Math.min(newX, maxX)),
-      pos_y: Math.max(0, Math.min(newY, maxY)),
-    });
-    onDrag(e.clientX, e.clientY);
+    const nextX = Math.max(0, Math.min(newX, maxX));
+    const nextY = Math.max(0, Math.min(newY, maxY));
+    const currentRect = e.currentTarget.getBoundingClientRect();
+    const nextRect = new DOMRect(
+      currentRect.left + nextX - pos.pos_x,
+      currentRect.top + nextY - pos.pos_y,
+      currentRect.width,
+      currentRect.height,
+    );
+
+    setPos({ pos_x: nextX, pos_y: nextY });
+    onDrag(nextRect);
   }
 
   return (
