@@ -4,8 +4,8 @@ import './styles/App.css';
 import TodoItem from './components/TodoItem';
 import './styles/Note.css';
 import './styles/TrashCan.css';
-import penImage from './assets/pen.png';
-import trashCan from './assets/trashCan.png';
+import penImage from './assets/pen.webp';
+import trashCan from './assets/trashCan.webp';
 
 function App() {
   const [notes, setNotes] = useState<Note[]>([]);
