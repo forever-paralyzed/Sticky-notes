@@ -51,7 +51,19 @@
   margin-bottom: 12px;
 }
 
+.note-text-input {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
 .author-input span {
+  white-space: nowrap;
+  font-size: 16px;
+}
+
+.note-text-input span {
   white-space: nowrap;
   font-size: 16px;
 }
@@ -95,6 +107,13 @@
 }
 
 .author-input input {
+  flex: 1;
+  min-width: 0;
+  width: auto;
+  font-size: 16px;
+}
+
+.note-text-input input {
   flex: 1;
   min-width: 0;
   width: auto;

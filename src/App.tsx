@@ -66,7 +66,7 @@ function App() {
 
   async function onAdd() {
     if (author.trim().length === 0) {
-      setHint('заполни имя!');
+      setHint('Please enter your name!');
       return;
     }
 
@@ -166,15 +166,18 @@ function App() {
             setHint('');
           }}
         />
-        <input
-          placeholder="add new sticky note"
-          type="text"
-          value={input}
-          onChange={(e) => {
-            setInput(e.target.value);
-            setHint('');
-          }}
-        />
+        <label className="note-text-input">
+          <span>Note:</span>
+          <input
+            placeholder="Write a note"
+            type="text"
+            value={input}
+            onChange={(e) => {
+              setInput(e.target.value);
+              setHint('');
+            }}
+          />
+        </label>
         <button className="note-btn">add</button>
         <img src={penImage} alt="pen" className="pen-input" />
       </form>

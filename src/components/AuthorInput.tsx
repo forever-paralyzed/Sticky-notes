@@ -6,11 +6,11 @@ type AuthorInputProps = {
 function AuthorInput({ value, onChange }: AuthorInputProps) {
   return (
     <label className="author-input">
-      <span>От кого:</span>
+      <span>From:</span>
       <input
         type="text"
         name="author"
-        placeholder="Имя"
+        placeholder="Name"
         value={value}
         aria-required="true"
         onChange={(event) => onChange(event.target.value)}
