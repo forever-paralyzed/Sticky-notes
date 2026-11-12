@@ -5,6 +5,7 @@ import { fileURLToPath } from 'node:url';
 
 type Note = {
   id: number;
+  author: string;
   text: string;
   pos_x: number;
   pos_y: number;
@@ -41,17 +42,28 @@ const database = new DatabaseSync(databasePath);
 database.exec(`
   CREATE TABLE IF NOT EXISTS notes (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
+    author TEXT NOT NULL DEFAULT 'Неизвестно',
     text TEXT NOT NULL,
     pos_x REAL NOT NULL,
     pos_y REAL NOT NULL
   )
 `);
 
+// Добавляем поле к уже существующей таблице, созданной до появления автора.
+const noteColumns = database.prepare('PRAGMA table_info(notes)').all() as {
+  name: string;
+}[];
+if (!noteColumns.some((column) => column.name === 'author')) {
+  database.exec(
+    "ALTER TABLE notes ADD COLUMN author TEXT NOT NULL DEFAULT 'Неизвестно'",
+  );
+}
+
 const getNotes = database.prepare(
-  'SELECT id, text, pos_x, pos_y FROM notes ORDER BY id',
+  'SELECT id, author, text, pos_x, pos_y FROM notes ORDER BY id',
 );
 const createNote = database.prepare(
-  'INSERT INTO notes (text, pos_x, pos_y) VALUES (?, ?, ?)',
+  'INSERT INTO notes (author, text, pos_x, pos_y) VALUES (?, ?, ?, ?)',
 );
 const moveNote = database.prepare(
   'UPDATE notes SET pos_x = ?, pos_y = ? WHERE id = ?',
@@ -63,21 +75,26 @@ app.get('/notes', (_req, res) => {
 });
 
 app.post('/notes', (req, res) => {
-  const { text, pos_x, pos_y } = req.body as Partial<Note>;
+  const { author, text, pos_x, pos_y } = req.body as Partial<Note>;
 
   if (
+    typeof author !== 'string' ||
+    author.trim().length === 0 ||
     typeof text !== 'string' ||
     text.trim().length === 0 ||
     typeof pos_x !== 'number' ||
     typeof pos_y !== 'number'
   ) {
-    res.status(400).json({ error: 'Нужны текст и числовые координаты заметки.' });
+    res.status(400).json({
+      error: 'Нужны имя автора, текст и числовые координаты заметки.',
+    });
     return;
   }
 
-  const result = createNote.run(text.trim(), pos_x, pos_y);
+  const result = createNote.run(author.trim(), text.trim(), pos_x, pos_y);
   const note: Note = {
     id: Number(result.lastInsertRowid),
+    author: author.trim(),
     text: text.trim(),
     pos_x,
     pos_y,

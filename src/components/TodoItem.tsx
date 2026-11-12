@@ -1,4 +1,5 @@
 import type { Note } from '../types';
+import NoteContent from './NoteContent';
 import '.././styles/Note.css';
 import { useEffect, useState, type PointerEvent } from 'react';
 
@@ -73,7 +74,7 @@ function TodoItem({ note, onMove, onDrag }: TodoItemProps) {
       onPointerUp={handleUp}
       onPointerMove={handleMove}
     >
-      {note.text}
+      <NoteContent author={note.author} text={note.text} />
     </div>
   );
 }

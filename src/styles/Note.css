@@ -14,6 +14,15 @@
   filter: drop-shadow(2px 4px 6px rgba(0, 0, 0, 0.3));
 }
 
+.note-author {
+  margin-bottom: 6px;
+  font-weight: bold;
+}
+
+.note-text {
+  white-space: pre-wrap;
+}
+
 .note-input {
   z-index: 10;
   position: fixed;
@@ -22,8 +31,18 @@
   width: 200px;
   padding: 20px 28px 28px;
   background: url('../assets/png-input.png') center / 100% 100% no-repeat;
-  aspect-ratio: 348 / 166;
+  aspect-ratio: 348 / 220;
   filter: drop-shadow(2px 4px 6px rgba(0, 0, 0, 0.3));
+}
+
+.author-input {
+  display: block;
+  margin-bottom: 4px;
+}
+
+.author-input span {
+  display: block;
+  font-size: 16px;
 }
 
 .note-btn {

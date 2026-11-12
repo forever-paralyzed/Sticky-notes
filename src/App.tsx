@@ -2,6 +2,7 @@ import { type SubmitEvent, useState, useEffect, useRef } from 'react';
 import type { Note } from './types';
 import './styles/App.css';
 import TodoItem from './components/TodoItem';
+import AuthorInput from './components/AuthorInput';
 import './styles/Note.css';
 import './styles/TrashCan.css';
 import penImage from './assets/pen.webp';
@@ -10,9 +11,11 @@ import trashCan from './assets/trashCan.webp';
 function App() {
   const [notes, setNotes] = useState<Note[]>([]);
   const [input, setInput] = useState('');
+  const [author, setAuthor] = useState('');
   const trashRef = useRef<HTMLDivElement>(null);
   const [overTrash, setOverTrash] = useState(false);
   const [hint, setHint] = useState('');
+  const [connectionHint, setConnectionHint] = useState('');
 
   function onDrag(noteRect: DOMRect) {
     setOverTrash(isTouchingTrash(noteRect));
@@ -43,11 +46,11 @@ function App() {
         const serverNotes = (await response.json()) as Note[];
         if (isActive) {
           setNotes(serverNotes);
-          setHint('');
+          setConnectionHint('');
         }
       } catch {
         if (isActive) {
-          setHint('Нет связи с сервером. Запусти sticky-server.');
+          setConnectionHint('Нет связи с сервером. Запусти sticky-server.');
         }
       }
     }
@@ -62,6 +65,11 @@ function App() {
   }, [apiUrl]);
 
   async function onAdd() {
+    if (author.trim().length === 0) {
+      setHint('заполни имя!');
+      return;
+    }
+
     if (input.trim().length === 0) {
       setHint('Сначала введи название!');
       return;
@@ -72,6 +80,7 @@ function App() {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
+          author: author.trim(),
           text: input.trim(),
           pos_x: 100 + notes.length * 15,
           pos_y: 100 + notes.length * 15,
@@ -82,6 +91,7 @@ function App() {
       }
       const createdNote = (await response.json()) as Note;
       setNotes((currentNotes) => [...currentNotes, createdNote]);
+      setAuthor('');
       setInput('');
       setHint('');
     } catch {
@@ -147,7 +157,15 @@ function App() {
   return (
     <div>
       <form className="note-input" onSubmit={handleSubmit}>
+        {connectionHint && <p className="note-hint">{connectionHint}</p>}
         {hint && <p className="note-hint">{hint}</p>}
+        <AuthorInput
+          value={author}
+          onChange={(value) => {
+            setAuthor(value);
+            setHint('');
+          }}
+        />
         <input
           placeholder="add new sticky note"
           type="text"
