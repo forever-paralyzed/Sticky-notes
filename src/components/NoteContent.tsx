@@ -6,7 +6,9 @@ type NoteContentProps = {
 function NoteContent({ author, text }: NoteContentProps) {
   return (
     <div className="note-content">
-      <div className="note-author">от: {author}</div>
+      <div className="note-author">
+        от: <span className="note-author-name">{author}</span>
+      </div>
       <div className="note-text">{text}</div>
     </div>
   );

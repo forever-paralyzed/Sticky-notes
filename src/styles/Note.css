@@ -19,8 +19,17 @@
   font-weight: bold;
 }
 
+.note-author-name {
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
 .note-text {
   white-space: pre-wrap;
+}
+
+.note-hint {
+  color: red;
 }
 
 .note-input {
