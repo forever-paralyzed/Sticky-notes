@@ -36,12 +36,14 @@
 }
 
 .author-input {
-  display: block;
-  margin-bottom: 4px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 12px;
 }
 
 .author-input span {
-  display: block;
+  white-space: nowrap;
   font-size: 16px;
 }
 
@@ -81,6 +83,13 @@
   background: transparent;
   outline: none;
   width: 100%;
+}
+
+.author-input input {
+  flex: 1;
+  min-width: 0;
+  width: auto;
+  font-size: 16px;
 }
 
 .note-input input:focus {
